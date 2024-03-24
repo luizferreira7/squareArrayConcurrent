@@ -12,18 +12,22 @@ typedef struct {
     int end;
 } ThreadArgs;
 
+
+// Metodo que preenche o vetor
 void fillArray(int array[]) {
     for (int i = 0; i < N; i++) {
         array[i] = i;
     }
 }
 
+// Metodo que eleva os elementos de um vetor ao quadrado
 void squareArray(int array[], int start, int end) {
     for (int i = start; i < end; i++) {
         array[i] *= i;
     }
 }
 
+// Metodo que imprime o vetor
 void printArray(int array[], int size) {
     for (int i = 0; i < size; i++) {
         printf("%d", array[i]);
@@ -36,6 +40,7 @@ void printArray(int array[], int size) {
     printf("\n");
 }
 
+// Metodo usado para passar os argumentos da Thread e invocar a função que eleva os elementos do vetor ao quadrado.
 void *squareArrayThread(void *args) {
     ThreadArgs *thread_args = (ThreadArgs *)args;
 
@@ -46,6 +51,8 @@ void *squareArrayThread(void *args) {
     pthread_exit(NULL);
 }
 
+
+// Verifica se os elementos dos vetores são iguais
 int arraysAreEqual(int array1[], int array2[]) {
     for (int i = 0; i < N; i++) {
         if (array1[i] != array2[i]) {
@@ -59,9 +66,9 @@ int main() {
     pthread_t tid_sistema[M];
 
     int *array = malloc(sizeof (int) * N);
-  
     fillArray(array);
 
+    // Calcula o numero de elementos que cada Thread vai processar
     int subArraySize = N/M;
     int remainder = N % M;
 
@@ -71,12 +78,13 @@ int main() {
     for(int i = 0; i < M; i++) {
         printf("\n--Cria a thread %d\n", i);
 
+        // Prepara os argumentos da Thread
         ThreadArgs *args = malloc(sizeof(ThreadArgs));
-
         args -> array = array;
         args -> start = i * subArraySize;
         args -> end = (i + 1) * subArraySize;
 
+        // Garante que a ultima Thread executa os elementos que sobram da divisam de N/M caso não seja exata
         if ( (i + 1) == M) {
             args -> end += remainder;
         }
@@ -97,8 +105,10 @@ int main() {
     printf("\nVetor ao quadrado: \n");
     printArray(array, N);
 
+    // Recria o vetor original para poder comparar o resultado
     int *auxArray = malloc(sizeof (int) * N);
     fillArray(auxArray);
+    // Usa o metodo de forma sequencial para comparar com o resultado obtido de forma concorrente
     squareArray(auxArray, 0, N);
 
     if (arraysAreEqual(array, auxArray) == -1) {
