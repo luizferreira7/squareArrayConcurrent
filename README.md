@@ -8,9 +8,7 @@ na mesma posição do elemento.)
 
 Roteiro:
 
-1. Comece pensando em como dividir a tarefa de elevar ao quadrado todos os ele-
-mentos de um vetor entre M threads.Importante: todas as threads deverao executar a mesma função. Qual(is) argumento(s) deverá(ão) ser passado(s) para a função
-executada pelas threads?
+1. Comece pensando em como dividir a tarefa de elevar ao quadrado todos os elementos de um vetor entre M threads. Importante: todas as threads deverão executar a mesma função. Qual(is) argumento(s) deverá(ão) ser passado(s) para a função executada pelas threads?
 
 2. Implemente func ̧oes separadas para inicializar e carregar o vetor e verificar se o
 resultado esta correto no final.
