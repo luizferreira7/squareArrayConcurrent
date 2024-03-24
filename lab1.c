@@ -2,14 +2,15 @@
 #include <stdlib.h> 
 #include <pthread.h>
 
-#define M 5
-#define N 101
+#define M 8
+#define N 10000
 
 
 typedef struct {
     int *array;
     int start;
     int end;
+    int index;
 } ThreadArgs;
 
 
@@ -46,8 +47,9 @@ void *squareArrayThread(void *args) {
 
     squareArray(thread_args -> array, thread_args -> start, thread_args -> end);
 
-    free(args);
+    printf("--Thread %d terminou a execução.\n", thread_args -> index);
 
+    free(args);
     pthread_exit(NULL);
 }
 
@@ -69,20 +71,21 @@ int main() {
     fillArray(array);
 
     // Calcula o numero de elementos que cada Thread vai processar
-    int subArraySize = N/M;
+    int threadArraySize = N / M;
     int remainder = N % M;
 
-    printf("Vetor original: \n");
-    printArray(array, N);
+    //printf("Vetor original: \n");
+    //printArray(array, N);
 
     for(int i = 0; i < M; i++) {
-        printf("\n--Cria a thread %d\n", i);
+        printf("--Cria a thread %d\n", i);
 
         // Prepara os argumentos da Thread
         ThreadArgs *args = malloc(sizeof(ThreadArgs));
         args -> array = array;
-        args -> start = i * subArraySize;
-        args -> end = (i + 1) * subArraySize;
+        args -> start = i * threadArraySize;
+        args -> end = (i + 1) * threadArraySize;
+        args -> index = i;
 
         // Garante que a ultima Thread executa os elementos que sobram da divisam de N/M caso não seja exata
         if ( (i + 1) == M) {
@@ -102,8 +105,8 @@ int main() {
 
     printf("\n--Thread principal terminou\n");
 
-    printf("\nVetor ao quadrado: \n");
-    printArray(array, N);
+    //printf("\nVetor ao quadrado: \n");
+    //printArray(array, N);
 
     // Recria o vetor original para poder comparar o resultado
     int *auxArray = malloc(sizeof (int) * N);
